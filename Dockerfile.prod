@@ -1,5 +1,4 @@
-# Estágio de construção
-FROM golang AS builder
+FROM golang:alpine3.18 AS builder
 WORKDIR /app
 
 COPY go.* ./
@@ -8,8 +7,7 @@ COPY *.go ./
 RUN CGO_ENABLED=0 go build -ldflags="-s -w" -o /hello_go_http
 RUN rm -rf /app/*
 
-# Estágio final
-FROM alpine:3.14
+FROM scratch
 WORKDIR /app
 COPY --from=builder /hello_go_http .
 CMD ["./hello_go_http"]
